@@ -27,6 +27,8 @@ jobs:
         R -e 'install.packages("dplyr")'
         R -e 'install.packages("readxl")'
         R -e 'install.packages("googlesheets4")'
+        R -e 'install.packages("readr")'
+        
 
     # Run R script
     - name: Scrape
