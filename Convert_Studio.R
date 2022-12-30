@@ -3,6 +3,7 @@ library(devtools)
 library(bigrquery)
 library(dplyr)
 library(readxl)
+library(readr)
 library("googlesheets4")
 library(dplyr)
 left <- function(text, n) {
