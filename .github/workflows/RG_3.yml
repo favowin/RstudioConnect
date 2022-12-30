@@ -28,11 +28,11 @@ jobs:
         R -e 'install.packages("readxl")'
         R -e 'install.packages("googlesheets4")'
         R -e 'install.packages("readr")'
-        R -e 'install.packages(lubridate)'
-        R -e 'install.packages(shinymanager)'
-        R -e 'install.packages(DT)'
-        R -e 'install.packages(mailR)'
-        R -e 'install.packages(htmlTable)'
+        R -e 'install.packages("lubridate")'
+        R -e 'install.packages("shinymanager")'
+        R -e 'install.packages("DT")'
+        R -e 'install.packages("mailR")'
+        R -e 'install.packages("htmlTable")'
         
        
 
