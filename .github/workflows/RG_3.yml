@@ -3,7 +3,7 @@ name: RG_3
 # Controls when the action will run.
 on:
   schedule:
-    - cron:  '0/3 * * * *'
+    - cron:  '36 9,10 * * *'
 
 
 jobs: 
