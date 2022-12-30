@@ -38,4 +38,4 @@ Payment_Collection_CASHLOAN$TRANSACTION_ID<-gsub("VTLEC","",Payment_Collection_C
 
 Payment_Collection_CASHLOAN$GHEP<-paste(Payment_Collection_CASHLOAN$CONTRACT_ID,Payment_Collection_CASHLOAN$TRANSACTION_ID,Payment_Collection_CASHLOAN$PAYMENT_AMOUNT,sep="")
 
-write_csv(Payment_Collection_CASHLOAN,paste0('data/','Payment_Collection_CASHLOAN_',Date[1],'.csv',sep=""))
+write_csv(Payment_Collection_CASHLOAN,paste0('data/','Payment_Collection_CASHLOAN_',gsub("-","",Sys.Date()-1),'.csv',sep=""))
