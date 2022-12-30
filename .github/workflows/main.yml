@@ -2,8 +2,8 @@ name: Convert_Studio
 
 # Controls when the action will run.
 on:
-  schedule:
-    - cron:  '3 * * * *'
+  push:
+    branches: main
 
 
 jobs: 
