@@ -50,7 +50,7 @@ send.mail(from = "duy.nguyen03@easycredit.vn",
           smtp = list(host.name = "smtp.office365.com", port = 587,
                       user.name = "duy.nguyen03@int.easycredit.vn", passwd = "Ingui@03364254545454545454", tls = TRUE),authenticate = TRUE,
           send = TRUE,
-          attach.files = c(paste0('data/','Payment_Collection_CASHLOAN_',gsub("-","",Sys.Date()-1),'.csv',sep="")),
+          attach.files = c(paste("data/","Payment_Collection_CASHLOAN_",gsub("-","",Sys.Date()-1),".csv",sep="")),
           file.names = c(paste("Payment_Collection_CASHLOAN_'",gsub("-","",Sys.Date()-1),".csv",sep="")),
           file.descriptions = c(paste("Payment_Collection_CASHLOAN_",gsub("-","",Sys.Date()-1),".csv",sep="")))
 
