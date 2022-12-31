@@ -35,17 +35,17 @@ html_body <- paste0("<html><head>
                </head><body><p>Dear Partner 3M,<br></br>EVNFC send to 3M reconsiliation data and service fee for the</p>",paste(format(Sys.Date()-18,format="%m"),"/",format(Sys.Date()-18,format="%Y"),sep=""),y,paste("Nguyen Duc Duy","Thank & Regard",sep="\n"),"</body></html>")
 
 # Configure details to send email using mailR
-sender <- "fofawubian369@fofawubian369.com"
+sender <- "duy.nguyen03@easycredit.vn"
 recipients <- c("duy.nguyen03@easycredit.vn","nguyenducduy250494@gmail.com")
 send.mail(from = sender,
           to = recipients,
           subject = paste("SERVICE FEE AND DATA RECONSILIATION FOR 3M FROM"," ",StartMonth," ","TO"," ",EndMonth,sep=""),
           body = html_body,
-          smtp = list(host.name = "mail.fofawubian369.com",
-                      port = 465, 
-                      user.name = "fofawubian369@fofawubian369.com",            
-                      passwd = "Fofawubian369",
-                      ssl = TRUE),
+          smtp = list(host.name = "smtp.office365.com",
+                      port = 587, 
+                      user.name = "duy.nguyen03@int.easycredit.vn",            
+                      passwd = "Ingui@03364254545454545454",
+                      tls = TRUE),
           authenticate = TRUE,
           html = TRUE,
           send = TRUE, attach.files = c(paste("FIPO/FEE_SERVICE_FIPO_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep=""),paste("FIPO/DATA_FIPO_DETAIL_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep="")))
