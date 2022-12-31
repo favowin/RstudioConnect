@@ -48,4 +48,4 @@ send.mail(from = sender,
                       ssl = TRUE),
           authenticate = TRUE,
           html = TRUE,
-          send = TRUE, attach.files = c(paste("FIPO/FEE_SERVICE_FIPO_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep=""),paste("FIPO/DATA_FIPO_DETAIL",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep="")))
+          send = TRUE, attach.files = c(paste("FIPO/FEE_SERVICE_FIPO_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep=""),paste("FIPO/DATA_FIPO_DETAIL_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep="")))
