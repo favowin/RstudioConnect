@@ -87,5 +87,5 @@ for (i in 1:nrow(DATA_FIPO_DETAIL)){
 }
 DATA_FIPO_DETAIL$NOTE<-NOTE
 
-write_csv(DATA_FIPO_DETAIL,paste("data/FIPO/","DATA_FIPO_DETAIL_",paste(format(Sys.Date(),format="%Y"),format(Sys.Date(),format="%m"),sep=""),".csv",sep=""))
-write_csv(FEE_SERVICE_FIPO,paste("data/FIPO/","FEE_SERVICE_FIPO_",paste(format(Sys.Date(),format="%Y"),format(Sys.Date(),format="%m"),sep=""),".csv",sep=""))
+write_csv(DATA_FIPO_DETAIL,paste("FIPO/","DATA_FIPO_DETAIL_",paste(format(Sys.Date(),format="%Y"),format(Sys.Date(),format="%m"),sep=""),".csv",sep=""))
+write_csv(FEE_SERVICE_FIPO,paste("FIPO/","FEE_SERVICE_FIPO_",paste(format(Sys.Date(),format="%Y"),format(Sys.Date(),format="%m"),sep=""),".csv",sep=""))
