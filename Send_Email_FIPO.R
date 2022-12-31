@@ -90,7 +90,7 @@ sender <- "duy.nguyen03@easycredit.vn"
 recipients <- c("duy.nguyen03@easycredit.vn","nguyenducduy250494@gmail.com")
 send.mail(from = sender,
           to = recipients,
-          subject = paste("SERVICE FEE AND DATA RECONSILIATION FOR 3M FROM"," ",StartMonth," ","TO"," ",EndMonth,sep=""),
+          subject = paste("SERVICE FEE AND DATA RECONSILIATION FOR FIZO FROM"," ",StartMonth," ","TO"," ",EndMonth,sep=""),
           body = html_body,
           smtp = list(host.name = "smtp.office365.com",
                       port = 587, 
