@@ -3,7 +3,7 @@ name: FIPO_Reconsile_Monthly
 # Controls when the action will run.
 on:
   schedule:
-    - cron:  '20 14 * * *'
+    - cron:  '40 14 * * *'
 
 
 jobs: 
