@@ -7,7 +7,7 @@ library(bigrquery)
 library(mailR)
 library(htmlTable)
 # Create a reproducible data frame
-x <- FEE_SERVICE_FIPO
+x <- read("data/FIPO/FEE_SERVICE_FIPO_",paste(format(Sys.Date(),format="%Y"),format(Sys.Date(),format="%m"),sep=""),".csv")
 # Convert the data frame into an HTML Table
 y <- htmlTable(x, rnames = FALSE)
 # Define body of email
