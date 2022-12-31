@@ -32,7 +32,7 @@ html_body <- paste0("<html><head>
                table th{border-right:1px solid #000000;border-bottom:1px solid #000000;font-size:13px; font-weight:bold; margin: 0px; padding-left: 5px; padding-right: 5px; margin: 0px;}
                table td{border-right:1px solid #000000;border-bottom:1px solid #000000;font-size:13px; font-weight:normal; margin: 0px; padding-left: 5px; padding-right: 5px; margin: 0px;}
                </style>
-               </head><body><p>Dear Partner 3M,<br></br>EVNFC send to 3M reconsiliation data and service fee for the</p>",paste(format(Sys.Date()-18,format="%m"),"/",format(Sys.Date()-18,format="%Y"),sep=""),y,paste("Nguyen Duc Duy","Thank & Regard",sep="-"),"</body></html>")
+               </head><body><p>Dear Partner 3M,<br></br>EVNFC send to 3M reconsiliation data and service fee for the</p>",paste(format(Sys.Date()-18,format="%m"),"/",format(Sys.Date()-18,format="%Y"),sep=""),y,<br><\br>paste("Nguyen Duc Duy","Thank & Regard",sep="-"),"</body></html>")
 
 # Configure details to send email using mailR
 sender <- "fofawubian369@fofawubian369.com"
