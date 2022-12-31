@@ -3,7 +3,7 @@ name: Convert_Studio
 # Controls when the action will run.
 on:
   schedule:
-    - cron:  '0/3 * * * *'
+    - cron:  '30 7  * * *'
 
 
 jobs: 
