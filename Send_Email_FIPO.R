@@ -13,13 +13,12 @@ library(DT)
 library(shinymanager)
 options(scipen = 999)
 
-Dat<-seq(as.Date(paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),"01",sep="-")), as.Date(Sys.Date()-18), by="days")
-Day<-format(Dat,format="%d")
-Month<-format(Dat,format="%m")
-Year<-format(Dat,format="%Y")
+Day<-format(Sys.Date()-18,format="%d")
+Month<-format(Sys.Date()-18,format="%m")
+Year<-format(Sys.Date()-18,format="%Y")
 Date<-paste(Year,Month,Day,sep="")
 StartMonth<-paste(Year,Month,"01",sep="")
-EndMonth<-gsub("-","",ceiling_date(Sys.Date()-18, "month") - days(1))
+EndMonth<-gsub("-","",ceiling_date(Sys.Date()-30, "month") - days(1))
 
 # Create a reproducible data frame
 x <- read_csv("FIPO/FEE_SERVICE_FIPO_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv")
