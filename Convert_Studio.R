@@ -52,6 +52,6 @@ send.mail(from = "duy.nguyen03@easycredit.vn",
           send = TRUE,
           attach.files = c(paste0('data/','Payment_Collection_CASHLOAN_',gsub("-","",Sys.Date()-1),'.csv',sep="")),
           file.names = c(paste("Payment_Collection_CASHLOAN_'",gsub("-","",Sys.Date()-1),".csv",sep="")),
-          file.descriptions = c(paste("Payment_Collection_CASHLOAN_",Date,".csv",sep="")))
+          file.descriptions = c(paste("Payment_Collection_CASHLOAN_",gsub("-","",Sys.Date()-1),".csv",sep="")))
 
 
