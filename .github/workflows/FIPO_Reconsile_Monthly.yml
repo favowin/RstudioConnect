@@ -53,5 +53,5 @@ jobs:
        username: github-actions
      
     # Run R script
-    - name: Scrape
-      run: Rscript Send_Email_FIPO.R
+    #- name: Scrape
+    #  run: Rscript Send_Email_FIPO.R
