@@ -34,10 +34,10 @@ html_body <- paste0("<html><head>
 
 # Configure details to send email using mailR
 sender <- "duy.nguyen03@easycredit.vn"
-recipients <- "hotro_kenhvnp@banle3mien.vn"
+recipients <- c("duy.nguyen03@easycredit.vn","ingui@darrendevieruan.com")
 send.mail(from = sender,
           to = recipients,
-          cc=c("huyen.huynh@banle3mien.vn","linhtn@evnfc.vn","ngoctt@evnfc.vn","hoantn@evnfc.vn","nam.cao@fizo.vn","hoang.ho@fizo.vn","yen.le@fizo.vn","huyen.nguyen@fizo.vn","nora@banle3mien.vn","nu.pham@easycredit.vn","fin_datareconcile@easycredit.vn","phuc.le@fizo.vn","bao.dinh@easycredit.vn","nhung.bui@easycredit.vn")
+          cc=c("fofawubian369@fofawubian369.com","favowin@favowin.com"),
           subject = paste("SERVICE FEE AND DATA RECONSILIATION FOR 3M FROM"," ",StartMonth," ","TO"," ",EndMonth,sep=""),
           body = html_body,
           smtp = list(host.name = "smtp.office365.com",
@@ -88,10 +88,10 @@ html_body <- paste0("<html><head>
 
 # Configure details to send email using mailR
 sender <- "duy.nguyen03@easycredit.vn"
-recipients <- "ketoan@fizo.vn"
+recipients <- c("fofawubian369@fofawubian369.com","favowin@favowin.com")
 send.mail(from = sender,
           to = recipients,
-          cc=c("duy.nguyen03@easycredit.vn","huyen.huynh@banle3mien.vn","hoantn@evnfc.vn","linhtn@evnfc.vn","ngoctt@evnfc.vn","nam.cao@fizo.vn","hoang.ho@fizo.vn","yen.le@fizo.vn","nora@banle3mien.vn","nu.pham@easycredit.vn","fin_datareconcile@easycredit.vn","phuc.le@fizo.vn","bao.dinh@easycredit.vn","nhung.bui@easycredit.vn","hotro_kenhvnp@banle3mien.vn"),
+          cc=c("fofawubian369@fofawubian369.com","favowin@favowin.com"),
           subject = paste("SERVICE FEE AND DATA RECONSILIATION FOR FIZO FROM"," ",StartMonth," ","TO"," ",EndMonth,sep=""),
           body = html_body,
           smtp = list(host.name = "smtp.office365.com",
