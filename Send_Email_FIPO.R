@@ -32,9 +32,8 @@ html_body <- paste0("<html><head>
                table th{border-right:1px solid #000000;border-bottom:1px solid #000000;font-size:13px; font-weight:bold; margin: 0px; padding-left: 5px; padding-right: 5px; margin: 0px;}
                table td{border-right:1px solid #000000;border-bottom:1px solid #000000;font-size:13px; font-weight:normal; margin: 0px; padding-left: 5px; padding-right: 5px; margin: 0px;}
                </style>
-               </head><body><p> This is a test email. Ignore it.</p>",
-                    y, 
-                    "</body></html>")
+               </head><body><p>Dear Partner 3M,<br></br>EVNFC send to 3M reconsiliation data and service fee for the</p>",paste(format(Sys.Date()-18,format="%m"),"/",format(Sys.Date()-18,format="%Y"),sep=""),y,"</body></html>")
+
 # Configure details to send email using mailR
 sender <- "fofawubian369@fofawubian369.com"
 recipients <- c("duy.nguyen03@easycredit.vn","nguyenducduy250494@gmail.com")
@@ -49,4 +48,4 @@ send.mail(from = sender,
                       ssl = TRUE),
           authenticate = TRUE,
           html = TRUE,
-          send = TRUE)
+          send = TRUE, attach.files = c(paste("FIPO/FEE_SERVICE_FIPO_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep=""),paste("FIPO/DATA_FIPO_DETAIL",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep="")))
