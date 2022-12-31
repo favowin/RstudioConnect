@@ -3,7 +3,7 @@ name: FIPO_Reconsile_Monthly
 # Controls when the action will run.
 on:
   push:
-    branches:  master
+    branches:  main
 
 
 jobs: 
@@ -47,7 +47,7 @@ jobs:
         git config --local user.email "actions@github.com"
         git add data/FIPO/*
         git commit -am "GH ACTION Headlines $(date)"
-        git push origin master
+        git push
       env:
        REPO_KEY: ${{secrets.GITHUB_TOKEN}}
        username: github-actions
