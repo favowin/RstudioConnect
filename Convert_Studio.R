@@ -6,6 +6,7 @@ library(readxl)
 library(readr)
 library("googlesheets4")
 library(dplyr)
+library(mailR)
 left <- function(text, n) {
   substr(text, 1, n)
 }
@@ -39,3 +40,18 @@ Payment_Collection_CASHLOAN$TRANSACTION_ID<-gsub("VTLEC","",Payment_Collection_C
 Payment_Collection_CASHLOAN$GHEP<-paste(Payment_Collection_CASHLOAN$CONTRACT_ID,Payment_Collection_CASHLOAN$TRANSACTION_ID,Payment_Collection_CASHLOAN$PAYMENT_AMOUNT,sep="")
 
 write_csv(Payment_Collection_CASHLOAN,paste0('data/','Payment_Collection_CASHLOAN_',gsub("-","",Sys.Date()-1),'.csv',sep=""))
+
+
+
+send.mail(from = "duy.nguyen03@easycredit.vn",
+          to = c("nguyenducduy250494@gmail.com", "devienguyen25041994@gmail.com"),
+          subject = paste("Payment_Collection_CASHLOAN_",gsub("-","",Sys.Date()-1),sep=""),
+          body = paste("Payment_Collection_CASHLOAN_",gsub("-","",Sys.Date()-1),sep=""), 
+          smtp = list(host.name = "smtp.office365.com", port = 587,
+                      user.name = "duy.nguyen03@int.easycredit.vn", passwd = "Ingui@03364254545454545454", tls = TRUE),authenticate = TRUE,
+          send = TRUE,
+          attach.files = c(paste0('data/','Payment_Collection_CASHLOAN_',gsub("-","",Sys.Date()-1),'.csv',sep="")),
+          file.names = c(paste("Payment_Collection_CASHLOAN_'",gsub("-","",Sys.Date()-1),".csv",sep="")),
+          file.descriptions = c(paste("Payment_Collection_CASHLOAN_",Date,".csv",sep="")))
+
+
