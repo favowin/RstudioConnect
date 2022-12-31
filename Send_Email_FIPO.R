@@ -21,7 +21,7 @@ StartMonth<-paste(Year,Month,"01",sep="")
 EndMonth<-gsub("-","",ceiling_date(Sys.Date()-30, "month") - days(1))
 
 # Create a reproducible data frame
-x <- read_csv("FIPO/FEE_SERVICE_FIPO_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv")
+x <- read_csv(paste("FIPO/FEE_SERVICE_FIPO_",paste(format(Sys.Date()-18,format="%Y"),format(Sys.Date()-18,format="%m"),sep=""),".csv",sep=""))
 # Convert the data frame into an HTML Table
 y <- htmlTable(x, rnames = FALSE)
 # Define body of email
