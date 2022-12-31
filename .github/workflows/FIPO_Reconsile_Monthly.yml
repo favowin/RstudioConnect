@@ -45,9 +45,9 @@ jobs:
       run: |
         git config --local user.name actions-user
         git config --local user.email "actions@github.com"
-        git add data/FIPO/*
+        git add data/*
         git commit -am "GH ACTION Headlines $(date)"
-        git push
+        git push origin main
       env:
        REPO_KEY: ${{secrets.GITHUB_TOKEN}}
        username: github-actions
