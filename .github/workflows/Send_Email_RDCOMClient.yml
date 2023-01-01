@@ -33,10 +33,8 @@ jobs:
         R -e 'install.packages("DT")'
         R -e 'install.packages("mailR")'
         R -e 'install.packages("htmlTable")'
-        R -e 'install.packages("remotes")'
-        R -e 'library("devtools")'
-        R -e 'devtools::install_github("omegahat/RDCOMClient",auth_token = NULL)'
-        
+        R -e 'install.packages("xlsx")'
+
         
        
     # Run R script
@@ -44,13 +42,13 @@ jobs:
       run: Rscript Send_Email_RDCOMClient.R
      
  # Add new files in data folder, commit along with other modified files, push
- #   - name: Commit files
- #     run: |
- #       git config --local user.name actions-user
- #       git config --local user.email "actions@github.com"
- #       git add data/*
- #       git commit -am "GH ACTION Headlines $(date)"
- #      git push origin main
+    - name: Commit files
+      run: |
+        git config --local user.name actions-user
+        git config --local user.email "actions@github.com"
+        git add data/*
+        git commit -am "GH ACTION Headlines $(date)"
+        git push origin main
     env:
         REPO_KEY: ${{secrets.GITHUB_TOKEN}}
         username: github-actions
