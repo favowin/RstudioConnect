@@ -33,8 +33,9 @@ jobs:
         R -e 'install.packages("DT")'
         R -e 'install.packages("mailR")'
         R -e 'install.packages("htmlTable")'
+        R -e 'install.packages("remotes")'
         R -e 'library("devtools")'
-        R -e 'install.packages("RDCOMClient", repos = "http://www.omegahat.net/R")'
+        R -e 'devtools::install_github("omegahat/RDCOMClient")'
         
         
        
