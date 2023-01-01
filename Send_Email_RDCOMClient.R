@@ -62,16 +62,18 @@ projectid = "evnfc-bigdata"
 #sql <- "SELECT * FROM `evnfc-bigdata.bu_fin.payment` where `payment_date` between '08/22/2022' and '08/22/2022'" 
 
 sql<-paste("SELECT * FROM `evnfc-bigdata.bu_fin.payment` where `payment_date` between ","'",paste(Month,Day,Year,sep = "/"),"'"," and ","'",paste(Month,Day,Year,sep = "/"),"'",sep="")
+library(DBI)
+con <- dbConnect(
+  bigrquery::bigquery(),
+  project = "evnfc-bigdata",
+  dataset = "bu_fin",
+  billing = "evnfc-bigdata"
+)
+con
+dbListTables(con)
+Payment_Collection_CASHLOAN<-dbGetQuery(con, sql, n = 10)
 
 
-
-# Run the query and store the data in a tibble
-tb <- bq_project_query(projectid, sql)
-
-# Print 08 rows of the data
-Payment_Collection_CASHLOAN<-bq_table_download(tb)
-
-# Payment_Collection_CASHLOAN<-Payment_Collection_CASHLOAN[,-c(1)]
 
 
 Payment_Collection_CASHLOAN['partner_code'][Payment_Collection_CASHLOAN['partner_code']=="VTL"]<-"VIETTEL STORE"
