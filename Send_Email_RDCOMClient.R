@@ -48,4 +48,5 @@ addDataFrame(mtcars[mtcars$cyl == 4 , ], sheet1, startRow=6, startColumn=1, coln
 setColumnWidth(sheet1, colIndex=1, colWidth=15)
 
 # Save the workbook
-saveWorkbook(workbook, "workbook.xlsx")
+saveWorkbook(workbook, paste("FIPO/workbook_",paste(format(Sys.Date()-1,format="%d"),format(Sys.Date()-1,format="%m"),format(Sys.Date()-1,format="%Y"),sep=""),".xlsx",sep=""))
+
