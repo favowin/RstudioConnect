@@ -49,6 +49,7 @@ library(bigrquery)
 library(dplyr)
 library(readxl)
 library("googlesheets4")
+bq_auth()
 
 Day<-format(Sys.Date()-1,format="%d")
 Month<-format(Sys.Date()-1,format="%m")
