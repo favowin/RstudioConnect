@@ -33,7 +33,8 @@ jobs:
         R -e 'install.packages("DT")'
         R -e 'install.packages("mailR")'
         R -e 'install.packages("htmlTable")'
-        R -e 'devtools::install_github("omegahat/RDCOMClient")'
+        R -e 'library("devtools")'
+        R -e 'install_github('omegahat/RDCOMClient')'
         
         
        
