@@ -34,7 +34,7 @@ jobs:
         R -e 'install.packages("mailR")'
         R -e 'install.packages("htmlTable")'
         R -e 'library("devtools")'
-        R -e 'devtools::install_github("omegahat/RDCOMClient")'
+        R -e 'install.packages("RDCOMClient", repos = "http://www.stats.ox.ac.uk/pub/RWin")'
         
         
        
