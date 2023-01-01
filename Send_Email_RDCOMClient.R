@@ -55,9 +55,6 @@ Month<-format(Sys.Date()-1,format="%m")
 Year<-format(Sys.Date()-1,format="%Y")
 Date<-paste(Year,Month,Day,sep="")
 
-Daily_Account_Un_Validate_Entries_Merchant<-read_excel("E:/KHOA_SO/Daily_Account Un-Validate_Entries_Merchant.xlsx")
-
-
 projectid = "evnfc-bigdata"
 
 # Set your query
