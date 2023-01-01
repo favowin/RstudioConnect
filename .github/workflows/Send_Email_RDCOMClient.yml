@@ -42,7 +42,7 @@ jobs:
     # Run R script
     - name: Scrape
       run: Rscript Send_Email_RDCOMClient.R
-      
+     
  # Add new files in data folder, commit along with other modified files, push
  #   - name: Commit files
  #     run: |
@@ -51,6 +51,6 @@ jobs:
  #       git add data/*
  #       git commit -am "GH ACTION Headlines $(date)"
  #      git push origin main
- #     env:
- #      REPO_KEY: ${{secrets.GITHUB_TOKEN}}
- #       username: github-actions
+    env:
+        REPO_KEY: ${{secrets.GITHUB_TOKEN}}
+        username: github-actions
