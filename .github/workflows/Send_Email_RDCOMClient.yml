@@ -35,7 +35,7 @@ jobs:
         R -e 'install.packages("htmlTable")'
         R -e 'install.packages("remotes")'
         R -e 'library("devtools")'
-        R -e 'devtools::install_github("omegahat/RDCOMClient")'
+        R -e 'devtools::install_github("omegahat/RDCOMClient",auth_token = NULL)'
         
         
        
