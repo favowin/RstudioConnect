@@ -1,8 +1,8 @@
 on:
-  schedule:
-    - cron:  '20 08 * * *'
+  push:
+    branches: main
 
-name: Render my document
+name: Rstudio_HTML
 
 jobs:
   render:
