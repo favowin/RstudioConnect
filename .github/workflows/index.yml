@@ -1,7 +1,6 @@
 on:
   push:
-    paths: 
-      - docs/index.Rmd
+    branches: main
 
 name: Render my document
 
