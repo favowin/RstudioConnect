@@ -1,6 +1,6 @@
 on:
   push:
-    paths:
+    paths: main
       - docs/index.Rmd
 
 name: Render my document
