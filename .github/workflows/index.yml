@@ -1,6 +1,6 @@
 on:
-  push:
-    branches: main
+  schedule:
+    - cron:  '09 08 * * *'
 
 name: Render my document
 
