@@ -1,6 +1,6 @@
 on:
-  push:
-    branches: main
+  schedule:
+    - cron:  '00 09 * * *'
 
 name: Rstudio_HTML
 
