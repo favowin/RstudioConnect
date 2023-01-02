@@ -34,7 +34,7 @@ jobs:
         R -e 'install.packages("mailR")'
         R -e 'install.packages("htmlTable")'
         R -e 'install.packages("openxlsx")'
-        R -e 'install.packages("RDCOMClient", repos = "http://www.omegahat.net/R", type = "win.binary")'
+        R -e 'install.packages("RDCOMClient", repos = "http://www.omegahat.net/R")'
         
         
         
