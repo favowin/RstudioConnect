@@ -202,9 +202,5 @@ FEE_SERVICE_FIPO %>%datatable()
 
 ```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
 FEE_SERVICE_FIPO%>%datatable()
-<iframe width="560" height="315" src="http://www.youtube.com/embed/ZqcIFvzq-j4?rel=0" frameborder="0" allowfullscreen>
 
-</iframe>
-
-</iframe>
 ```
