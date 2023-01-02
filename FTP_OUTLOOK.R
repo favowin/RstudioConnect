@@ -1,4 +1,3 @@
-install.packages("RDCOMClient", repos = "http://www.omegahat.net/R", type = "win.binary")
 library(RDCOMClient)
 library(openxlsx)
 library(lubridate)
