@@ -31,6 +31,8 @@ jobs:
          R -e 'install.packages("mailR")'
          R -e 'install.packages("htmlTable")'
          R -e 'install.packages("formattable")'
+         R -e 'install.packages("howler")'
+         
       - name: Install rmarkdown
         run: Rscript -e 'install.packages("rmarkdown")'
       - name: Render my document to all types
