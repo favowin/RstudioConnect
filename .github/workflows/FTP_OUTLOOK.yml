@@ -19,20 +19,11 @@ jobs:
     # Set-up R
     - name: Install packages
       run: |
-        R -e 'install.packages("bigrquery")'
-        R -e 'install.packages("devtools")'
-        R -e 'install.packages("dplyr")'
-        R -e 'install.packages("readxl")'
-        R -e 'install.packages("googlesheets4")'
         R -e 'install.packages("readr")'
         R -e 'install.packages("lubridate")'
-        R -e 'install.packages("shinymanager")'
-        R -e 'install.packages("DT")'
-        R -e 'install.packages("mailR")'
-        R -e 'install.packages("htmlTable")'
         R -e 'install.packages("openxlsx")'
         R -e 'install.packages("http://www.omegahat.net/R/bin/windows/contrib/4.0/RDCOMClient_0.94-0.zip", repos=NULL, type="binary")'
-        
+        R -e 'install.packages("RCurl")'
         
         
        
