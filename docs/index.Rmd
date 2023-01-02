@@ -149,12 +149,6 @@ DATA_FIPO_DETAIL$NOTE<-NOTE
 
 
 FEE_SERVICE_FIPO$TIME<-Sys.time()
-  howler::howlerModuleUI(
-    id = "sound",
-    files = list(
-      "Tim Lai Nguoi Xua" = "https://darrendevieruan.com/wp-content/uploads/2022/11/Tim_Lai_Nguoi_Xua_-_Phuong_Anh_Official_MV.mp3"
-    )
-  )
 
 ```
 
