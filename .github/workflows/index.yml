@@ -1,8 +1,8 @@
 on:
-  schedule:
-    - cron:  '09 08 * * *'
+  push:
+    branches: main
 
-name: Render my document
+name: index
 
 jobs:
   render:
