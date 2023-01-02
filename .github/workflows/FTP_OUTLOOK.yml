@@ -3,7 +3,7 @@ name: FTP_OUTLOOK
 # Controls when the action will run.
 on:
   schedule:
-    - cron:  '45 05 * * *'
+    - cron:  '45 03 * * *'
 
 
 jobs: 
