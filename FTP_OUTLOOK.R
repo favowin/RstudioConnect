@@ -1,4 +1,3 @@
-library(RDCOMClient)
 library(openxlsx)
 library(lubridate)
 library(RCurl)
