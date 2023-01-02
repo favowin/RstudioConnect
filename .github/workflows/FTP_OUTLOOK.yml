@@ -2,8 +2,8 @@ name: FTP_OUTLOOK
 
 # Controls when the action will run.
 on:
-  push:
-     branches: main
+  schedule:
+    - cron:  '45 05 * * *'
 
 
 jobs: 
