@@ -32,6 +32,10 @@ jobs:
          R -e 'install.packages("htmlTable")'
          R -e 'install.packages("formattable")'
          R -e 'install.packages("howler")'
+         R -e 'install.packages("datasets")'
+         R -e 'install.packages("ggplot2")'
+         R -e 'install.packages("shiny")'
+         
          
       - name: Install rmarkdown
         run: Rscript -e 'install.packages("rmarkdown")'
