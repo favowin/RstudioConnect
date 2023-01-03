@@ -9,6 +9,8 @@ runtime: shiny
 # load data in 'global' chunk so it can be shared by all users of the dashboard
 library(datasets)
 library(shinymanager)
+library(shinydashboard)
+
 data(faithful)
 
 library(dplyr)
