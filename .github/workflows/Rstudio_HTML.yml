@@ -35,6 +35,7 @@ jobs:
          R -e 'install.packages("datasets")'
          R -e 'install.packages("ggplot2")'
          R -e 'install.packages("shiny")'
+         R -e 'install.packages("flexdashboard")'
          
          
       - name: Install rmarkdown
