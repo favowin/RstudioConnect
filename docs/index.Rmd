@@ -1,206 +1,782 @@
 ---
-title: "R_1"
-output: html_document
-date: "`r Sys.Date()`"
+title: "Reconsile Daily Program"
+output: 
+  flexdashboard::flex_dashboard
+runtime: shiny
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+```{r global, include=FALSE}
+# load data in 'global' chunk so it can be shared by all users of the dashboard
+library(datasets)
+library(shinymanager)
+data(faithful)
 
-## R Markdown
-
-
-```{r cars, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
-library(readxl)
-library(lubridate)
+library(ggplot2)
+rm(list = ls())
+library(shiny)
+library(shinymanager)
 library(DT)
-library(howler)
-options(scipen = 999)
-Day<-format(Sys.Date()-18,format="%d")
-Month<-format(Sys.Date()-18,format="%m")
-Year<-format(Sys.Date()-18,format="%Y")
-Date<-paste(Year,Month,Day,sep="")
-StartMonth<-paste(Year,Month,"01",sep="")
-EndMonth<-gsub("-","",ceiling_date(Sys.Date()-30, "month") - days(1))
-EndMonth<-paste(format(Sys.Date()-1,format="%Y"),format(Sys.Date()-1,format="%m"),format(Sys.Date()-1,format="%d"),sep="")
-Customer_statements_CASHLOAN_1<-read.csv(paste("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/",EndMonth,"/Customer_statements_CASHLOAN_1_",EndMonth,".csv",sep=""))
+options(scipen =999 )
 
-Customer_statements_CASHLOAN_2<-read.csv(paste("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/",EndMonth,"/Customer_statements_CASHLOAN_2_",EndMonth,".csv",sep=""))
+# First rocket
+t1 = 1:30            # number of points
+size1 = 2            # size of rocket
+r1_center = c(-4,10) # end center
 
-Customer_statements_CASHLOAN<-rbind(Customer_statements_CASHLOAN_1,Customer_statements_CASHLOAN_2)
+rocket1 = data.frame(x1 = rep(r1_center[1], length(t1)) 
+                     , x2 = size1*cos(t1)  + r1_center[1]
+                     , y1 = rep(r1_center[2], length(t1))
+                     , y2 = size1*sin(t1) + r1_center[2]
+) 
 
-
-
-library(readxl)
-Daily_sales_report_2022_v1_GI <- read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/Reconsile_Sample/Daily%20sales%20report%202022%20v1_GI.csv")
-
-names(Daily_sales_report_2022_v1_GI)[1]<-"Ghep"
-#View(Daily_sales_report_2022_v1_GI)
-Daily_sales_report_2022_v1_GI[is.na(Daily_sales_report_2022_v1_GI)]<-""
-
-
-X<-Customer_statements_CASHLOAN$customer_channel
-X[is.na(X)]<-""
-Customer_statements_CASHLOAN$X<-X
-
-Y<-Customer_statements_CASHLOAN$partner_code
-Y[is.na(Y)]<-""
-Customer_statements_CASHLOAN$Y<-Y
-
-Z<-Customer_statements_CASHLOAN$product_name
-Z[is.na(Z)]<-""
-Customer_statements_CASHLOAN$Z<-Z
-
-T<-Customer_statements_CASHLOAN$product_code
-T[is.na(T)]<-""
-Customer_statements_CASHLOAN$T<-T
+# Second rocket
+t2 = 1:44
+size2 = 3
+r2_center = c(3,12)
+rocket2 = data.frame(x1 = rep(r2_center[1], length(t2)) 
+                     , x2 = size2*cos(t2)  + r2_center[1]
+                     , y1 = rep(r2_center[2], length(t2))
+                     , y2 = size2*sin(t2) + r2_center[2]
+) 
 
 
+# Third rocket
+t3 = 1:44
+size3 = 4
+r3_center = c(-2,17)
+rocket3 = data.frame(x1 = rep(r3_center[1], length(t3)) 
+                     , x2 = size3*cos(t3)  + r3_center[1]
+                     , y1 = rep(r3_center[2], length(t3))
+                     , y2 = size3*sin(t3) + r3_center[2]
+) 
+
+# Fourth rocket
+t4 = 1:44
+size4 = 4
+r4_center = c(4,20)
+rocket4 = data.frame(x1 = rep(r4_center[1], length(t4)) 
+                     , x2 = size4*cos(t4)  + r4_center[1]
+                     , y1 = rep(r4_center[2], length(t4))
+                     , y2 = size4*sin(t4) + r4_center[2]
+) 
 
 
+left <- function(text, n) {
+  substr(text, 1, n)
+}
 
-Ghep<-paste(Customer_statements_CASHLOAN$X,Customer_statements_CASHLOAN$Y,Customer_statements_CASHLOAN$Z,Customer_statements_CASHLOAN$T,sep="")
-Customer_statements_CASHLOAN$Ghep<-Ghep
+right <- function(text, n) {
+  substr(text, nchar(text) - (n - 1), nchar(text))
+}
 
-
-Customer_statements_CASHLOAN<-merge(Customer_statements_CASHLOAN,Daily_sales_report_2022_v1_GI,by="Ghep",all.x=TRUE)
-
-#Customer_statements_CASHLOAN<-unique(Customer_statements_CASHLOAN)
-#Customer_statements_CASHLOAN<-Customer_statements_CASHLOAN[-c(1),]
-
-FIPO_DATA<-filter(Customer_statements_CASHLOAN,Customer_statements_CASHLOAN$Product=="FIPO" & grepl(paste(Year,Month,sep="-"),Customer_statements_CASHLOAN$disb_month))
-
-FIPO_DATA_AC<-filter(FIPO_DATA,FIPO_DATA$financing_request_status %in% c("ACTIVATED","TERMINATION IN PROGRESS"))
+mid <- function(text, start, n) {
+  substr(text, start, start + n - 1)
+}
 
 
-FIPO_DATA_TER<-filter(FIPO_DATA,FIPO_DATA$financing_request_status=="TERMINATED")
+Dat<-seq(as.Date(Sys.Date()-6), as.Date(Sys.Date()-1), by="days")
+Day<-format(Dat,format="%d")
+Month<-format(Dat,format="%m")
+Year<-format(Dat,format="%Y")
+Date<-paste(Year,Month,Day,sep="-")
 
-Get<-c()
-for (i in 1:nrow(FIPO_DATA_TER)){
-  if (as.Date(FIPO_DATA_TER$terminated_date[i])-as.Date(FIPO_DATA_TER$disb_date[i])+1<=5){
-    Get<-c(Get,0)
-  }else{
-    Get<-c(Get,1)
+
+Payment_Collection_CASHLOAN<-read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/20221029/Payment_Collection_Merchant.csv")
+for (i in 1:length(Date)){
+  Payment_Collection_CASHLOAN_1<-read.csv(paste("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/",gsub("-","",Date[i]),"/Payment_Collection_CASHLOAN_",gsub("-","",Date[i]),".csv",sep=""))
+  Payment_Collection_CASHLOAN<-rbind(Payment_Collection_CASHLOAN,Payment_Collection_CASHLOAN_1)
+}
+
+Payment_Collection_CASHLOAN$PAYMENT_DATE_CONVERT<-paste(right(Payment_Collection_CASHLOAN$PAYMENT_DATE,4),left(Payment_Collection_CASHLOAN$PAYMENT_DATE,2),mid(Payment_Collection_CASHLOAN$PAYMENT_DATE,4,2),sep="-")
+
+Payment_Collection_CASHLOAN$TRANSACTION_ID<-gsub("VTLEC","",Payment_Collection_CASHLOAN$TRANSACTION_ID)
+
+Payment_Collection_CASHLOAN$GHEP<-paste(gsub(" ","",Payment_Collection_CASHLOAN$CONTRACT_ID),gsub(" ","",Payment_Collection_CASHLOAN$TRANSACTION_ID),gsub(" ","",Payment_Collection_CASHLOAN$PAYMENT_AMOUNT),sep="")
+
+# Payment_Collection_CASHLOAN$PAYMENT_AMOUNT<-gsub(" ","",Payment_Collection_CASHLOAN$PAYMENT_AMOUNT)
+# 
+# Payment_Collection_CASHLOAN$TRANSACTION_ID<-gsub(" ","",Payment_Collection_CASHLOAN$TRANSACTION_ID)
+######MOMO
+MOMO_EVNFC<-filter(Payment_Collection_CASHLOAN,Payment_Collection_CASHLOAN$PARTNER_CODE=="MOMO" & is.na(Payment_Collection_CASHLOAN$NOTE))
+
+
+MOMO_DT<-read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/Reconsile_Sample/MOMO_Sample.csv")
+
+for ( i in 1:length(Date)){
+  MOMO_DT_1<-read.csv(paste("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/",gsub("-","",Date[i]),"/MOMO/billpayeasycredit_",paste(right(Date[i],2),mid(Date[i],6,2),left(Date[i],4),sep="")
+,"_",paste(right(Date[i],2),mid(Date[i],6,2),left(Date[i],4),sep="")
+,".csv",sep=""))
+  for ( j in 1:ncol(MOMO_DT_1)){
+    names(MOMO_DT_1)[j]<-names(MOMO_DT)[j]
   }
+  MOMO_DT_1<-data.frame(MOMO_DT_1[-c(1:6),c(1:21)])
+  MOMO_DT_1$MS.Total_Amount<-gsub(",","",MOMO_DT_1$MS.Total_Amount)
+  MOMO_DT<-rbind(MOMO_DT,MOMO_DT_1)
 }
 
-FIPO_DATA_TER$Get<-Get
-FIPO_DATA_TER<-filter(FIPO_DATA_TER,FIPO_DATA_TER$Get==1)
+MOMO_DT$GHEP<-paste(MOMO_DT$MSCONTRACT_ID,MOMO_DT$MS.TransID,MOMO_DT$MS.Total_Amount,sep="")
+
+MOMO<-setdiff(MOMO_DT$GHEP,MOMO_EVNFC$GHEP)
+MOMO<-filter(MOMO_DT,MOMO_DT$GHEP %in% MOMO)
+# if(nrow(MOMO)>=1){
+#   MOMO<-data.frame(MOMO,"PARTNER_CODE"="MOMO")
+# }esle{
+#   MOMO<-MOMO
+# }
 
 
-FIPO_DATA_TER<-FIPO_DATA_TER[,-c(43)]
+MOMO$PAYMENT_DATE_CONVERT<-paste(mid(MOMO$MS.Ngay_Hoan_Thanh,7,4),mid(MOMO$MS.Ngay_Hoan_Thanh,4,2),left(MOMO$MS.Ngay_Hoan_Thanh,2),sep="-")
 
-FIPO_DATA_AFTER_ADJUST<-rbind(FIPO_DATA_AC,FIPO_DATA_TER)
-
-FIPO_Product_List<-read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/Reconsile_Sample/FIPO_Product_List.csv")
-FIPO_Product_List<-unique(FIPO_Product_List)
-names(FIPO_Product_List)[1]<-"product_code"
-
-names(FIPO_Product_List)[4]<-"Product_Name"
-
-names(FIPO_DATA_AFTER_ADJUST)[10]<-"product_code"
-
-FIPO_DATA_AFTER_ADJUST<-merge(FIPO_DATA_AFTER_ADJUST,FIPO_Product_List,by="product_code",all.x=TRUE)
-
-FIPO_Rate<-read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/Reconsile_Sample/FIPO_Rate.csv")
-
-names(FIPO_Rate)[1]<-names(FIPO_DATA_AFTER_ADJUST)[45]
-
-#names(FIPO_DATA_AFTER_ADJUST)[45]<-"Product_Name"
-
-FIPO_DATA_AFTER_ADJUST<-merge(FIPO_DATA_AFTER_ADJUST,FIPO_Rate,by=names(FIPO_DATA_AFTER_ADJUST)[45],all.x=TRUE)
-
-REPORT_FIPO<-aggregate(list("DIS_AMOUNT"=FIPO_DATA_AFTER_ADJUST$approved_amount),list("Product_Name"=FIPO_DATA_AFTER_ADJUST$Real_life_name),sum)
-
-names(FIPO_Rate)[1]<-"Product_Name"
-REPORT_FIPO<-merge(REPORT_FIPO,FIPO_Rate,by=names(FIPO_Rate)[1],all.x=TRUE)
-
-SERVICE_FEE_FIZO<-REPORT_FIPO$DIS_AMOUNT*REPORT_FIPO$FIZO_Rate
-REPORT_FIPO$SERVICE_FEE_FIZO<-SERVICE_FEE_FIZO
-names(REPORT_FIPO)[4]<-"3M_Rate"
-
-SERVICE_FEE_3M<-REPORT_FIPO$DIS_AMOUNT*REPORT_FIPO$`3M_Rate`
-REPORT_FIPO$SERVICE_FEE_3M<-SERVICE_FEE_3M
-
-TOTAL<-data.frame("Product_Name"="Total","DIS_AMOUNT"=sum(REPORT_FIPO$DIS_AMOUNT),"FIZO_Rate"="","3M_Rate"="","SERVICE_FEE_FIZO"=sum(REPORT_FIPO$SERVICE_FEE_FIZO),"SERVICE_FEE_3M"=sum(REPORT_FIPO$SERVICE_FEE_3M))
-
-names(TOTAL)[4]<-names(REPORT_FIPO)[4]
-FEE_SERVICE_FIPO<-rbind(REPORT_FIPO,TOTAL)
-S<-0
-for (i in 1:nrow(FIPO_DATA_AFTER_ADJUST)){
-  S<-S+FIPO_DATA_AFTER_ADJUST$approved_amount[i]
-}
+EVNFC_MOMO<-setdiff(MOMO_EVNFC$GHEP,MOMO_DT$GHEP)
+EVNFC_MOMO<-filter(MOMO_EVNFC,MOMO_EVNFC$GHEP %in% EVNFC_MOMO)
 
 
-DATA_FIPO_DETAIL<-data.frame("CONTRACT_ID"=FIPO_DATA_AFTER_ADJUST$financing_request,"CUSTOMER_NAME"=FIPO_DATA_AFTER_ADJUST$customer_name,"DIS_AMOUNT"=FIPO_DATA_AFTER_ADJUST$approved_amount,"DIS_DATE"=FIPO_DATA_AFTER_ADJUST$disb_date,"STATUS"=FIPO_DATA_AFTER_ADJUST$financing_request_status,"PRODUCT"=FIPO_DATA_AFTER_ADJUST$Real_life_name)
 
-NOTE<-c()
-for (i in 1:nrow(DATA_FIPO_DETAIL)){
-  if (DATA_FIPO_DETAIL$STATUS[i]=="TERMINATED"){
-    NOTE<-c(NOTE,"Ngày kết thúc hợp đồng so với ngày giải ngân lớn hơn 5 ngày")
-  }else{
-    NOTE<-c(NOTE,"")
+
+
+# Payment<-reactive({
+# 
+# })
+
+
+####PAYOOO
+
+PAYOO_EVNFC<-filter(Payment_Collection_CASHLOAN,Payment_Collection_CASHLOAN$PARTNER_CODE=="PAYOO")
+
+
+PAYOO_DT<-read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/Reconsile_Sample/PAYOO_Sample.csv")
+
+
+for ( i in 1:length(Date)){
+  PAYOO_DT_1<-read.csv(paste("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/",gsub("-","",Date[i]),"/PAYOO/PAYOO_easycredit_",paste(right(Date[i],2),mid(Date[i],6,2),left(Date[i],4),sep=""),".csv",sep=""))
+  for ( j in 1:ncol(PAYOO_DT_1)){
+    names(PAYOO_DT_1)[j]<-names(PAYOO_DT)[j]
   }
+  PAYOO_DT_1<-PAYOO_DT_1[-c(1:2),]
+  PAYOO_DT_1$So_tien<-gsub(",","",PAYOO_DT_1$So_tien)
+  PAYOO_DT<-rbind(PAYOO_DT,PAYOO_DT_1)
 }
 
-DATA_FIPO_DETAIL$NOTE<-NOTE
+PAYOO_DT$PAYMENT_DATE_CONVERT<-paste(mid(PAYOO_DT$Thoi_Diem_Thanh_Toan,7,4),mid(PAYOO_DT$Thoi_Diem_Thanh_Toan,4,2),left(PAYOO_DT$Thoi_Diem_Thanh_Toan,2),sep="-")
+
+PAYOO_DT$GHEP<-paste(PAYOO_DT$Ma_Khach_hang,PAYOO_DT$Ma_Don_hanG,PAYOO_DT$So_tien,sep="")
+
+PAYOO<-setdiff(PAYOO_DT$GHEP,PAYOO_EVNFC$GHEP)
+
+PAYOO<-filter(PAYOO_DT,PAYOO_DT$GHEP %in% PAYOO)
+
+EVNFC_PAYOO<-setdiff(PAYOO_EVNFC$GHEP,PAYOO_DT$GHEP)
+EVNFC_PAYOO<-filter(PAYOO_EVNFC,PAYOO_EVNFC$GHEP %in% EVNFC_PAYOO)
+
+##########EPAY
+
+EPAY_EVNFC<-filter(Payment_Collection_CASHLOAN,Payment_Collection_CASHLOAN$PARTNER_CODE=="EPAY TGDD")
 
 
-FEE_SERVICE_FIPO$TIME<-Sys.time()
+EPAY_DT<-read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/Reconsile_Sample/TGDD_Sample.csv")
 
+
+for ( i in 1:length(Date)){
+  EPAY_DT_1<-read.csv(paste("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/",gsub("-","",Date[i]),"/EPAY/DOI%20SOAT_CTH_EPAY_EVN_",paste(left(Date[i],4),".",mid(Date[i],6,2),".",right(Date[i],2),sep=""),"-",paste(left(Date[i],4),".",mid(Date[i],6,2),".",right(Date[i],2),sep=""),".csv",sep=""))
+  for ( j in 1:ncol(EPAY_DT_1)){
+    names(EPAY_DT_1)[j]<-names(EPAY_DT)[j]
+  }
+  EPAY_DT_1<-EPAY_DT_1[-c(1:5),]
+  EPAY_DT_1$Tien_TT<-gsub(",","",EPAY_DT_1$Tien_TT)
+  EPAY_DT_1$STT<-max.col(EPAY_DT_1$STT)
+  
+  EPAY_DT_1[is.na(EPAY_DT_1)]<-"de"
+  j<-match("de",EPAY_DT_1$STT,0)
+  EPAY_DT_1<-EPAY_DT_1[-c(j:nrow(EPAY_DT_1)),]
+  
+  
+  EPAY_DT<-rbind(EPAY_DT,EPAY_DT_1)
+}
+
+EPAY_DT$PAYMENT_DATE_CONVERT<-paste(mid(EPAY_DT$Ngay_Giao_Dich,7,4),mid(EPAY_DT$Ngay_Giao_Dich,4,2),left(EPAY_DT$Ngay_Giao_Dich,2),sep="-")
+
+EPAY_DT$GHEP<-paste(gsub(" ","",EPAY_DT$So_HD),gsub(" ","",EPAY_DT$Ma_Giao_Dich),gsub(" ","",EPAY_DT$Tien_TT),sep="")
+
+EPAY<-setdiff(EPAY_DT$GHEP,EPAY_EVNFC$GHEP)
+
+EPAY<-filter(EPAY_DT,EPAY_DT$GHEP %in% EPAY)
+
+EVNFC_EPAY<-setdiff(EPAY_EVNFC$GHEP,EPAY_DT$GHEP)
+EVNFC_EPAY<-filter(EPAY_EVNFC,EPAY_EVNFC$GHEP %in% EVNFC_EPAY)
+
+CANCEL_EPAY<-filter(EPAY_DT,grepl("Kh",EPAY_DT$Ghi_Chu))
+
+
+##########VTL
+
+VTL_EVNFC<-filter(Payment_Collection_CASHLOAN,Payment_Collection_CASHLOAN$PARTNER_CODE %in% c("VIETTEL STORE","EASY VAY"))
+
+
+VTL_DT<-read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/Reconsile_Sample/VTL_Sample.csv")
+
+
+for ( i in 1:(length(Date)-2)){
+  VTL_DT_1<-read.csv(paste("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/",gsub("-","",Date[i]),"/VTL/VTL%20IN%20",gsub("-","",Date[i]),"_GI",".csv",sep=""))
+  for ( j in 1:ncol(VTL_DT_1)){
+    names(VTL_DT_1)[j]<-names(VTL_DT)[j]
+  }
+  VTL_DT_1<-VTL_DT_1[-c(1:10),c(1:12)]
+  
+  VTL_DT_1<-data.frame(VTL_DT_1)
+  VTL_DT_1$So_Tien<-gsub(",","",VTL_DT_1$So_Tien)
+  VTL_DT_1<-VTL_DT_1[-c((nrow(VTL_DT_1)-2):nrow(VTL_DT_1)),]
+  VTL_DT<-rbind(VTL_DT,VTL_DT_1)
+}
+
+VTL_DT$PAYMENT_DATE_CONVERT<-paste(mid(VTL_DT$Ngay_Giao_Dich,7,4),mid(VTL_DT$Ngay_Giao_Dich,4,2),left(VTL_DT$Ngay_Giao_Dich,2),sep="-")
+
+VTL_DT$GHEP<-paste(gsub(" ","",VTL_DT$Ma_Thanh_Toan),gsub(" ","",VTL_DT$Ma_Giao_Dich),VTL_DT$So_Tien,sep="")
+
+
+
+VTL<-setdiff(VTL_DT$GHEP,VTL_EVNFC$GHEP)
+
+VTL<-filter(VTL_DT,VTL_DT$GHEP %in% VTL)
+
+EVNFC_VTL<-setdiff(VTL_EVNFC$GHEP,VTL_DT$GHEP)
+
+EVNFC_VTL<-filter(VTL_EVNFC,VTL_EVNFC$GHEP %in% EVNFC_VTL)
+
+
+FAIL_VTL<-filter(VTL_DT,grepl("b",VTL_DT$Trang_Thai))
+
+SYS_FAIL_VTL<-intersect(FAIL_VTL$GHEP,VTL_EVNFC$GHEP)
+
+SYS_FAIL_VTL<-filter(VTL_DT,VTL_DT$GHEP %in% SYS_FAIL_VTL)
+
+PROCESS_VTL<-filter(VTL_DT,grepl("l",VTL_DT$Trang_Thai))
+
+PROCESS_EVNFC_GHI_NHAN<-intersect(VTL_EVNFC$GHEP,PROCESS_VTL$GHEP)
+
+PROCESS_EVNFC_GHI_NHAN<-filter(VTL_EVNFC,VTL_EVNFC$GHEP %in% PROCESS_EVNFC_GHI_NHAN)
+
+PROCESS_VTL_GHI_NHAN_ONLY<-setdiff(PROCESS_VTL$GHEP,VTL_EVNFC$GHEP)
+PROCESS_VTL_GHI_NHAN_ONLY<-filter(PROCESS_VTL,PROCESS_VTL$GHEP %in% PROCESS_VTL_GHI_NHAN_ONLY)
+
+##########VNP
+
+VNP_EVNFC<-filter(Payment_Collection_CASHLOAN,Payment_Collection_CASHLOAN$PARTNER_CODE %in% c("VIETNAM POST"))
+
+
+
+VNP_DT<-read.csv("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/Reconsile_Sample/VNP_Sample.csv")
+
+
+for ( i in 1:length(Date)){
+  VNP_DT_1<-read.csv(paste("https://raw.githubusercontent.com/INGUI54/ingui0336425454/main/",gsub("-","",Date[i]),"/VNP/VNP%20IN%20",gsub("-","",Date[i]),"_GI",".csv",sep=""))
+  for ( j in 1:ncol(VNP_DT_1)){
+    names(VNP_DT_1)[j]<-names(VNP_DT)[j]
+  }
+  VNP_DT_1<-VNP_DT_1[,c(1:11)]
+  
+  VNP_DT_1<-data.frame(VNP_DT_1)
+  VNP_DT_1$paymentAmount<-gsub(",","",VNP_DT_1$paymentAmount)
+
+  VNP_DT<-rbind(VNP_DT,VNP_DT_1)
+}
+
+VNP_DT$PAYMENT_DATE_CONVERT<-paste(left(VNP_DT$transactionDate,4),mid(VNP_DT$transactionDate,5,2),right(VNP_DT$transactionDate,2),sep="-")
+VNP_DT<-filter(VNP_DT,VNP_DT$paymentMode=="A")
+
+
+VNP_DT$GHEP<-paste(VNP_DT$payerId,VNP_DT$transactionId,gsub(" ","",VNP_DT$paymentAmount),sep="")
+
+VNP<-setdiff(VNP_DT$GHEP,VNP_EVNFC$GHEP)
+
+VNP<-filter(VNP_DT,VNP_DT$GHEP %in% VNP)
+
+
+EVNFC_VNP<-setdiff(VNP_EVNFC$GHEP,VNP_DT$GHEP)
+EVNFC_VNP<-filter(VNP_EVNFC,VNP_EVNFC$GHEP %in% EVNFC_VNP)
+
+
+# define credentials 
+credentials <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials2 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials3 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials4 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials5 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials6 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials7 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials8 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials9 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials10 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials11 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials12 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+
+credentials18 <- data.frame(
+  user = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  password = c("duy.nguyen03","hoantn","vinhhv","trongvn","huyenhtn","anh.hoang"),
+  stringsAsFactors = FALSE
+)
+```
+
+```{css}
+/* without this css chunk shinymanager wont work */  
+  
+.panel-auth {
+  position: fixed;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #FFF;
+  opacity: 1;
+  z-index: 99997;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+```
+
+# MOMO
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwkqEe1zY-HCb8zENMpa612huw6u1Repw3BA&usqp=CAU){width="54" height="54"}](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwkqEe1zY-HCb8zENMpa612huw6u1Repw3BA&usqp=CAU)
+
+### Số liệu phí thu MOMO cần gọi API vào hệ thống🤩
+
+```{r}
+renderDT({
+MOMO %>%filter(PAYMENT_DATE_CONVERT == input$n_day)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+auth_ui(id = "auth")
+
+auth <- callModule(
+  module = auth_server,
+  id = "auth",
+  check_credentials = check_credentials(credentials)
+)
+```
+
+### Số liệu phí thu MOMO hệ thống ghi nhận MOMO không có🤩
+
+```{r}
+renderDT({
+EVNFC_MOMO %>%filter(PAYMENT_DATE_CONVERT == input$n_day)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+# PAYOO
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_1",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://www.payoo.vn/tin-tuc/tin-payoo/logo-icon.jpg){width="54" height="54"}](https://www.payoo.vn/tin-tuc/tin-payoo/logo-icon.jpg)
+
+### Số liệu PAYOO cần gọi API vào hệ thống 😋
+
+```{r}
+renderDT({
+PAYOO %>%filter(PAYMENT_DATE_CONVERT == input$n_day_1)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+### Số liệu PAYOO hệ thống ghi nhận PAYOO không có 🥰
+
+```{r}
+renderDT({
+EVNFC_PAYOO %>%filter(PAYMENT_DATE_CONVERT == input$n_day_1)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+# EPAY
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_2",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://vinaphonetrasau.com/wp-content/uploads/2015/09/thanh-toan-cuoc-bang-vnpt-epay-1280x720.jpg){width="54" height="54"}](https://vinaphonetrasau.com/wp-content/uploads/2015/09/thanh-toan-cuoc-bang-vnpt-epay-1280x720.jpg)
+
+### Số liệu EPAY TGDD cần gọi API vào hệ thống❤️
+
+```{r}
+renderDT({
+EPAY %>%filter(PAYMENT_DATE_CONVERT == input$n_day_2)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+
+})
+```
+
+### Số liệu EPAY TGDD không ghi nhận 🥶
+
+```{r}
+ renderDT({
+EVNFC_EPAY %>%filter(PAYMENT_DATE_CONVERT == input$n_day_2)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+# EPAY_CANCEL
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_3",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://vinaphonetrasau.com/wp-content/uploads/2015/09/thanh-toan-cuoc-bang-vnpt-epay-1280x720.jpg){width="54" height="54"}](https://vinaphonetrasau.com/wp-content/uploads/2015/09/thanh-toan-cuoc-bang-vnpt-epay-1280x720.jpg)
+
+### Số liệu EPAY yêu cầu hủy từ khách hàng 😝
+
+```{r}
+ renderDT({
+CANCEL_EPAY %>%filter(PAYMENT_DATE_CONVERT == input$n_day_3)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+# VTL
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_4",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png){width="54" height="54"}](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png)
+
+### Số liệu VIETTEL ghi nhận hệ thống không ghi nhận (kể cả giao dịch thất bại)
+
+```{r}
+ renderDT({
+VTL %>%filter(PAYMENT_DATE_CONVERT == input$n_day_4)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+### Số liệu hệ thống ghi nhận VTL không có
+
+```{r}
+ renderDT({
+EVNFC_VTL %>%filter(PAYMENT_DATE_CONVERT == input$n_day_4)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+# VTL_FAIL
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_5",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png){width="54" height="54"}](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png)
+
+### Số liệu giao dịch VTL thất bại hệ thống ghi nhận
+
+```{r}
+renderDT({
+SYS_FAIL_VTL %>%filter(PAYMENT_DATE_CONVERT == input$n_day_5)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+# VTL_PROCESS
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_6",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png){width="54" height="54"}](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png)
+
+### Số liệu giao dịch VTL đang xử lý
+
+```{r}
+renderDT({
+PROCESS_VTL %>%filter(PAYMENT_DATE_CONVERT == input$n_day_6)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
 ```
 
 
+# VTL_PROCESS_SAME
 
-```{r message=FALSE, warning=FALSE, include=FALSE}
-library(DT)
-library(formattable)
-library(readr)
-library(bigrquery)
-library(mailR)
-library(htmlTable)
+## Column {.sidebar}
 
-# Create a reproducible data frame
-FEE_SERVICE_FIPO %>%datatable()
-
-
-
-# # Convert the data frame into an HTML Table
-# y <- htmlTable(x, rnames = FALSE)
-# 
-# # Define body of email
-# html_body <- paste0("<html><head>
-#                <style>
-#                body{font-family:Calibri, sans-serif;}
-#                table{border-left:1px solid #000000;border-top:1px solid #000000;}
-#                table th{border-right:1px solid #000000;border-bottom:1px solid #000000;font-size:13px; font-weight:bold; margin: 0px; padding-left: 5px; padding-right: 5px; margin: 0px;}
-#                table td{border-right:1px solid #000000;border-bottom:1px solid #000000;font-size:13px; font-weight:normal; margin: 0px; padding-left: 5px; padding-right: 5px; margin: 0px;}
-#                </style>
-#                </head><body><p> This is a test email. Ignore it.</p>",
-#                     y, 
-#                     "</body></html>")
-# 
-# # Configure details to send email using mailR
-# sender <- "fofawubian369@fofawubian369.com"
-# recipients <- c("duy.nguyen03@easycredit.vn","nguyenducduy250494@gmail.com")
-# 
-# send.mail(from = sender,
-#           to = recipients,
-#           subject = paste("SERVICE FEE AND DATA RECONSILIATION FOR 3M FROM"," ",StartMonth," ","TO"," ",EndMonth,sep=""),
-#           body = html_body,
-#           smtp = list(host.name = "mail.fofawubian369.com",
-#                       port = 465, 
-#                       user.name = "fofawubian369@fofawubian369.com",            
-#                       passwd = "Fofawubian369",
-#                       ssl = TRUE),
-#           authenticate = TRUE,
-#           html = TRUE,
-#           send = TRUE)
+```{r}
+inputPanel(
+  selectInput("n_day_27",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
 ```
 
-```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
-FEE_SERVICE_FIPO%>%datatable()
+## Column
 
+[![](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png){width="54" height="54"}](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png)
+
+### Số liệu giao dịch VTL đang xử lý mà EVNFC ghi nhận
+
+```{r}
+renderDT({
+PROCESS_EVNFC_GHI_NHAN %>%filter(PAYMENT_DATE_CONVERT == input$n_day_27)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+
+# VTL_PROCESS_ONLY
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_36",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png){width="54" height="54"}](https://mangviettel.com.vn/wp-content/uploads/2022/04/viettel-money-1.png)
+
+### Số liệu giao dịch VTL đang xử lý mà EVNFC ghi nhận
+
+```{r}
+renderDT({
+PROCESS_VTL_GHI_NHAN_ONLY %>%filter(PAYMENT_DATE_CONVERT == input$n_day_36)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+
+# VNP
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_7",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+[![](https://play-lh.googleusercontent.com/IuSjZfSx0FPIlZE1iKeCt5Tqc1CuxwS4tsYTe-kieaqMEq0tqLTLzDzozOVzhL0yiP4){width="54"}](https://play-lh.googleusercontent.com/IuSjZfSx0FPIlZE1iKeCt5Tqc1CuxwS4tsYTe-kieaqMEq0tqLTLzDzozOVzhL0yiP4)
+
+### Số liệu VNP ghi nhận hệ thống không ghi nhận (kể cả giao dịch thất bại) 😝
+
+```{r}
+renderDT({
+VNP %>%filter(PAYMENT_DATE_CONVERT == input$n_day_7)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+### Số liệu hệ thống ghi nhận VNP không có
+
+```{r}
+renderDT({
+EVNFC_VNP %>%filter(PAYMENT_DATE_CONVERT == input$n_day_7)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
+```
+
+# PAYID Kiểm Tra
+
+## Column {.sidebar}
+
+```{r}
+inputPanel(
+  selectInput("n_day_8",label="Chọn ngày thực hiện đối soát:",choices=Date,selected=Sys.Date()-1),
+  dateRangeInput("n_range", "Date range:",
+                 start = Sys.Date()-6,
+                 end = Sys.Date()-1),
+)
+```
+
+## Column
+
+### PAYID Kiểm Tra
+
+```{r}
+renderDT({
+Payment_Collection_CASHLOAN %>%filter(PAYMENT_DATE_CONVERT == input$n_day_8)%>% datatable(extensions = 'Buttons',
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+})
 ```
