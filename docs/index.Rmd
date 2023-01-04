@@ -1,227 +1,29 @@
 ---
-title: "Phí dịch vụ và số liệu đối soát TSA MOBI `r Sys.Date()`"
-output:
-  html_document:
-    code_folding: hide
-  pdf_document: default
+title: "Untitled"
+output: html_document
+date: "2023-01-04"
 ---
-  
-# Đối soát số liệu và phí dịch vụ `r Sys.Date()`
 
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-#TSA
-#TSA_MOBI
-library(bigrquery)
-library(devtools)
-library(bigrquery)
-library(dplyr)
-library(readxl)
-library(DT)
-library(lubridate)
-library(readr)
-
-library(tidyverse)
-
-left <- function(text, n) {
-  substr(text, 1, n)
-}
-
-right <- function(text, n) {
-  substr(text, nchar(text) - (n - 1), nchar(text))
-}
-
-mid <- function(text, start, n) {
-  substr(text, start, start + n - 1)
-}
-#TSA
-#TSA_MOBI
-library(bigrquery)
-library(devtools)
-library(bigrquery)
-library(dplyr)
-library(readxl)
-library(lubridate)
-library(readr)
-
-Dat<-seq(as.Date(Sys.Date()-30), as.Date(Sys.Date()-30), by="days")
-#class(Dat)
-Day<-format(Dat,format="%d")
-Month<-format(Dat,format="%m")
-Year<-format(Dat,format="%Y")
-Date<-paste(Year,Month,Day,sep="")
-StartMonth<-paste(Year,Month,"01",sep="")
-
-EndMonth<-gsub("-","",ceiling_date(Sys.Date()-30, "month") - days(1))
-
-VIETTEL_DAU_SO<-read_excel("E:/Reconliiation/RISK_2/Reconsile/202207/CIC Data/VIETTEL_NUMBER_FIRST.xlsx")
-VIETTEL_DAU_SO$MANG<-"VIETTEL"
-
-MOBI_DAU_SO<-read_excel("E:/Reconliiation/RISK_2/Reconsile/202207/CIC Data/MOBI_NUMBER_FIRST.xlsx")
-MOBI_DAU_SO$MANG<-"MOBI"
-
-VINA_DAU_SO<-read_excel("E:/Reconliiation/RISK_2/Reconsile/202207/CIC Data/VINA_NUMBER_FIRST.xlsx")
-VINA_DAU_SO$MANG<-"VINA"
-
-
-VIETNAM_DAU_SO<-read_excel("E:/Reconliiation/RISK_2/Reconsile/202207/CIC Data/VIETNAM_NUMBER_FIRST.xlsx")
-VIETNAM_DAU_SO$MANG<-"VIETNAM"
-
-
-GET_DAU_SO<-rbind(VIETTEL_DAU_SO,MOBI_DAU_SO,VINA_DAU_SO,VIETNAM_DAU_SO)
-
-
-
-TSA_BI<-read_excel(paste("E:/Reconliiation/RISK_2/Reconsile/",paste(Year,Month,sep=""),"/","Risk Reconciliation_",paste(Year,Month,sep=""),".xlsx",sep=""),sheet="TSA_CES")
-DAU_SO<-mid(TSA_BI$phone_number,2,2)
-
-TSA_BI$DAU_SO<-DAU_SO
-
-TSA_BI<-merge(TSA_BI,GET_DAU_SO,by="DAU_SO",all.x=TRUE)
-
-#CS_MOBI
-CS_TSA_BI<-filter(TSA_BI,TSA_BI$score_type=="CS" & TSA_BI$MANG=="MOBI")
-
-
-CS_TSA_DT_MOBI<-read_excel(paste("E:/Reconliiation/RISK_2/Reconsile/",paste(Year,Month,sep=""),"/TSA/MOBI/",paste("credit_score_mobifone_evnfc_",paste(paste(right(StartMonth,2),mid(StartMonth,5,2),left(StartMonth,4),sep="-"),"_",paste(right(EndMonth,2),mid(EndMonth,5,2),left(EndMonth,4),sep="-"),sep=""),sep=""),".xlsx",sep=""),sheet=2)
-
-#PHONE_NUMBER<-paste("0",right(CS_TSA_DT_MOBI$phone_number,9),sep="")
-#CS_TSA_DT_MOBI$PHONE_NUMBER<-PHONE_NUMBER
-
-
-CS_TSA<-setdiff(CS_TSA_DT_MOBI$id,CS_TSA_BI$id)
-
-CS_TSA<-filter(CS_TSA_DT_MOBI,CS_TSA_DT_MOBI$id %in% CS_TSA)
-
-
-
-CS_TSA_BI_CHECK_LAN_2<-filter(TSA_BI,TSA_BI$id%in% CS_TSA$id & TSA_BI$score_type=="CS")
-
-CS_TSA<-setdiff(CS_TSA$id,CS_TSA_BI_CHECK_LAN_2$id)
-
-CS_TSA<-filter(CS_TSA_BI_CHECK_LAN_2,CS_TSA_BI_CHECK_LAN_2$id %in% CS_TSA)
-
-CS_TSA_SAME<-intersect(CS_TSA_DT_MOBI$id,CS_TSA_BI$id)
-
-CS_TSA_SAME<-filter(CS_TSA_BI,CS_TSA_BI$id %in% CS_TSA_SAME)
-if(nrow(CS_TSA)==0){
-CS_TSA_SAME<-rbind(CS_TSA_SAME,CS_TSA_BI_CHECK_LAN_2)
-}
-
-
-CS_BI<-setdiff(CS_TSA_BI$id,CS_TSA_DT_MOBI$id)
-
-CS_BI<-filter(CS_TSA_BI,CS_TSA_BI$id %in% CS_BI)
-
-
-
-#FS MOBI
-FS_TSA_BI<-filter(TSA_BI,TSA_BI$score_type=="FS" & TSA_BI$MANG=="MOBI")
-
-FS_TSA_DT_MOBI<-read_excel(paste("E:/Reconliiation/RISK_2/Reconsile/",paste(Year,Month,sep=""),"/TSA/MOBI/",paste("fraud_score_mobifone_evnfc_",paste(paste(right(StartMonth,2),mid(StartMonth,5,2),left(StartMonth,4),sep="-"),"_",paste(right(EndMonth,2),mid(EndMonth,5,2),left(EndMonth,4),sep="-"),sep=""),sep=""),".xlsx",sep=""),sheet=2)
-
-
-
-# PHONE_NUMBER<-paste("0",right(FS_TSA_DT_MOBI$phone_number,9),sep="")
-# FS_TSA_DT_MOBI$PHONE_NUMBER<-PHONE_NUMBER
-
-
-FS_TSA<-setdiff(FS_TSA_DT_MOBI$id,FS_TSA_BI$id)
-
-FS_TSA<-filter(FS_TSA_DT_MOBI,FS_TSA_DT_MOBI$id %in% FS_TSA)
-
-FS_TSA_SAME<-intersect(FS_TSA_DT_MOBI$id,FS_TSA_BI$id)
-FS_TSA_SAME<-filter(FS_TSA_BI,FS_TSA_BI$id %in% FS_TSA_SAME)
-
-
-FS_TSA_BI_CHECK_LAN_2<-filter(TSA_BI,TSA_BI$id %in% FS_TSA$id & TSA_BI$score_type=="FS")
-
-FS_TSA<-setdiff(FS_TSA$id,FS_TSA_BI_CHECK_LAN_2$id)
-FS_TSA<-filter(FS_TSA_BI_CHECK_LAN_2,FS_TSA_BI_CHECK_LAN_2$id %in% FS_TSA)
-
-
-if(nrow(FS_TSA)==0){
-  FS_TSA_SAME<-rbind(FS_TSA_SAME,FS_TSA_BI_CHECK_LAN_2)
-}
-
-
-
-FS_BI<-setdiff(FS_TSA_BI$request_id,FS_TSA_DT_MOBI$id)
-
-FS_BI<-filter(FS_TSA_BI,FS_TSA_BI$id %in% FS_BI)
-
-CREDIT_SCORE<-setdiff(CS_TSA_SAME$phone_number,FS_TSA_SAME$phone_number)
-
-CREDIT_SCORE<-filter(CS_TSA_SAME,CS_TSA_SAME$phone_number %in% CREDIT_SCORE)
-
-FEE_CREDIT_SCORE<-60500*nrow(CREDIT_SCORE)
-
-FRAUD_SCORE<-setdiff(FS_TSA_SAME$phone_number,CS_TSA_SAME$phone_number)
-
-FRAUD_SCORE<-filter(FS_TSA_SAME,FS_TSA_SAME$phone_number %in% FRAUD_SCORE)
-
-FEE_FRAUD_SCORE<-27500*nrow(FRAUD_SCORE)
-
-COMBO_FRAUD_CREDIT_SCORE<-intersect(FS_TSA_SAME$phone_number,CS_TSA_SAME$phone_number)
-COMBO_FRAUD_CREDIT_SCORE<-filter(FS_TSA_SAME,FS_TSA_SAME$phone_number %in% COMBO_FRAUD_CREDIT_SCORE)
-
-FEE_COMBO_FRAUD_CREDIT_SCORE<-71500*nrow(COMBO_FRAUD_CREDIT_SCORE)
-
-FEE_TSA_MOBI<-data.frame("TSA"="TSA MOBIFONE","NO_CREDIT_SCORE"=nrow(CREDIT_SCORE),"FEE_CREDIT_SCORE"=FEE_CREDIT_SCORE,"NO_FRAUD_SCORE"=nrow(FRAUD_SCORE),"FEE_FRAUD_SCORE"=FEE_FRAUD_SCORE,"NO_COMBO_FRAUD_CREDIT_SCORE"=nrow(COMBO_FRAUD_CREDIT_SCORE),"FEE_COMBO_FRAUD_CREDIT_SCORE"=FEE_COMBO_FRAUD_CREDIT_SCORE,"FEE_TSA_MOBIFONE_VAT"=FEE_CREDIT_SCORE+FEE_FRAUD_SCORE+FEE_COMBO_FRAUD_CREDIT_SCORE,"FEE_TSA_MOBIFONE_NOT_VAT"=(FEE_CREDIT_SCORE+FEE_FRAUD_SCORE+FEE_COMBO_FRAUD_CREDIT_SCORE)/1.1)
-
-
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## R Markdown
 
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-### Phí dịch vụ 
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-
-
- 
-```{r show_data, echo=FALSE, warning=FALSE}
-t(FEE_TSA_MOBI)%>%datatable(extensions = 'Buttons',
-            options = list(dom = 'Blfrtip',
-                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-                           lengthMenu = list(c(10,25,50,-1),
-                                             c(10,25,50,"All"))))
- 
+```{r cars}
+summary(cars)
 ```
 
-### Số liệu FRAUD_SCORE
+## Including Plots
 
+You can also embed plots, for example:
 
-
- 
-```{r show_data_1, echo=FALSE, warning=FALSE}
-FRAUD_SCORE%>%  datatable(extensions = 'Buttons',
-            options = list(dom = 'Blfrtip',
-                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-                           lengthMenu = list(c(10,25,50,-1),
-                                             c(10,25,50,"All"))))
+```{r pressure, echo=FALSE}
+plot(pressure)
 ```
 
-
-
-
-
-### Số liệu CREDIT_SCORE
- 
-```{r show_data_2, echo=FALSE, warning=FALSE}
-CREDIT_SCORE%>%  datatable(extensions = 'Buttons',
-            options = list(dom = 'Blfrtip',
-                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-                           lengthMenu = list(c(10,25,50,-1),
-                                             c(10,25,50,"All"))))
-```
-
-### Số liệu NO_COMBO
- 
-```{r show_data_3, echo=FALSE, warning=FALSE}
-COMBO_FRAUD_CREDIT_SCORE%>%  datatable(extensions = 'Buttons',
-            options = list(dom = 'Blfrtip',
-                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-                           lengthMenu = list(c(10,25,50,-1),
-                                             c(10,25,50,"All"))))
-```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
