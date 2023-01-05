@@ -111,29 +111,3 @@ rmarkdown::output_metadata$set(rsc_output_files = list(fname))
 
 [Link to CSV](`r fname`)
 
-## Email
-
-This report also produces an email that is sent to key stakeholders with summary
-information if the price change is above 50 cents. 
-
-```{r send_email, warning = FALSE, message = FALSE, echo = TRUE}
-# Calculate the total change
-close <- Cl(xts::last(prices, n = 2))
-diff <- round(as.numeric(close[2]) - as.numeric(close[1]), 2)
-subject <- sprintf("TSLA is %s today by $%g!", 
-        ifelse(diff > 0,"up", "down"), 
-        abs(diff))
-
-# If the change is above a certain threshold, send an email to stake holders
-# with key results embedded directly in the email
-if (abs(diff) > 0.5) {
-  render_connect_email(input = "stock-report-email.Rmd") %>%
-  attach_connect_email(
-    subject = subject,
-    attach_output = TRUE,
-    attachments = c(fname)
-)
-} else {
-  blastula::suppress_scheduled_email()
-}
-```
