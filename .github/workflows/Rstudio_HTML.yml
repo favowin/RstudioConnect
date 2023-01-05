@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron:  '23 07 * * *'
+    - cron:  '39 07 * * *'
 
 name: Rstudio_HTML
 
