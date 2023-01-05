@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron:  '12 17 * * *'
+    - cron:  '23 07 * * *'
 
 name: Rstudio_HTML
 
@@ -17,7 +17,6 @@ jobs:
       - name: Install packages
         run: |
          R -e 'install.packages("tidyverse")'
-         R -e 'install.packages("rvest")'
          R -e 'install.packages("rvest")'
          R -e 'install.packages("bigrquery")'
          R -e 'install.packages("devtools")'
@@ -36,6 +35,11 @@ jobs:
          R -e 'install.packages("ggplot2")'
          R -e 'install.packages("shiny")'
          R -e 'install.packages("flexdashboard")'
+         R -e 'install.packages("blastula")'
+         R -e 'install.packages("ggthemes")'
+         R -e 'install.packages("quantmod")'
+         R -e 'install.packages("plotly")'
+         
          
          
       - name: Install rmarkdown
