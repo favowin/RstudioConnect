@@ -130,24 +130,13 @@ html_body <- paste0("<html><head>
                </head><body><p> The contract is different RG between Daily and BOM.</p>",
                     y, 
                     "</body></html>")
-# 
-# send.mail(from = "fofawubian369@fofawubian369.com",
-#           to = c("duy.nguyen03@easycredit.vn"),
-#           subject = paste("Different_RG_",Date,sep=""),
-#           body = html_body,
-#           smtp = list(host.name = "mail.fofawubian369.com", port = 25,
-#                       user.name = "fofawubian369@fofawubian369.com", passwd = "Fofawubian369", ssl = TRUE),authenticate = TRUE,html=TRUE,send = TRUE)
-# 
 
-
-
-
-send.mail(from = "fofawubian369@fofawubian369.com",
+send.mail(from = "reconciliation@reconciliation.fofawubian369.com",
           to = c("duy.nguyen03@easycredit.vn"),
           subject = paste("Different_RG_",Date,sep=""),
           body =html_body,
-          smtp = list(host.name = "mail.fofawubian369.com", port = 25,
-                      user.name = "fofawubian369@fofawubian369.com",
+          smtp = list(host.name = "mail.reconciliation.fofawubian369.com", port = 465,
+                      user.name = "reconciliation@reconciliation.fofawubian369.com",
                       passwd = "Fofawubian369", ssl = TRUE),
           authenticate = TRUE,html=TRUE,
           send = TRUE)
