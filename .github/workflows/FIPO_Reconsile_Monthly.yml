@@ -34,6 +34,7 @@ jobs:
         R -e 'install.packages("mailR")'
         R -e 'install.packages("htmlTable")'
         R -e 'install.packages("formattable")'
+        R -e 'install.packages("Rcpp")'
         R -e 'install.packages("http://www.omegahat.net/R/bin/windows/contrib/4.0/RDCOMClient_0.94-0.zip", repos=NULL, type="binary")'
        
 
