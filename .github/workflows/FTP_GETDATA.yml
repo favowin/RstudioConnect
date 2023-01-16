@@ -20,8 +20,6 @@ jobs:
     - name: Install packages
       run: |
         R -e 'install.packages("curl")'
-        R -e 'install.packages("shiny")'
-        R -e 'install.packages("curl")'
         R -e 'install.packages("DT")'
         R -e 'install.packages("openxlsx")'
         R -e 'install.packages("lubridate")'
