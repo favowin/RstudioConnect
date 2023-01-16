@@ -1,6 +1,4 @@
 library(curl)
-library(shiny)
-library(DT)
 
 library(openxlsx)
 library(lubridate)
