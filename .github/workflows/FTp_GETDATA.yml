@@ -1,0 +1,47 @@
+name: FTP_GETDATA
+
+# Controls when the action will run.
+on:
+  push:
+     branches: main
+
+
+jobs: 
+  autoscrape:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    # Load repo and install R
+    steps:
+    - uses: actions/checkout@v2
+    - uses: r-lib/actions/setup-r@v2
+
+    # Set-up R
+    - name: Install packages
+      run: |
+        R -e 'install.packages("curl")'
+        R -e 'install.packages("shiny")'
+        R -e 'install.packages("curl")'
+        R -e 'install.packages("DT")'
+        R -e 'install.packages("openxlsx")'
+        R -e 'install.packages("lubridate")'
+        R -e 'install.packages("RCurl")'
+        
+        
+
+    # Run R script
+    - name: Scrape
+      run: Rscript FTP_GETDATA.R
+      
+ # Add new files in data folder, commit along with other modified files, push
+    - name: Commit files
+      run: |
+        git config --local user.name actions-user
+        git config --local user.email "actions@github.com"
+        git add FIPO/*
+        git commit -am "GH ACTION Headlines $(date)"
+        git push origin main
+      env:
+       REPO_KEY: ${{secrets.GITHUB_TOKEN}}
+       username: github-actions
+     
