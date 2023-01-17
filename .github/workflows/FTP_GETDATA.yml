@@ -38,7 +38,12 @@ jobs:
           git config --local user.email "actions@github.com"
           git add VNP/*
           git commit -am "GH ACTION Headlines $(date)"
-          git push -f origin main
+          git fetch origin master
+          git merge  master
+          git fetch origin master:tmp
+          git rebase tmp
+          git push origin HEAD:master
+          git branch -D tmp
       env:
          REPO_KEY: ${{secrets.GITHUB_TOKEN}}
          username: github-actions
